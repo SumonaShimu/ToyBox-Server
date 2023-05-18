@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ObjectId,ServerApiVersion  } = require('mongodb');
+const { MongoClient, ObjectId, ServerApiVersion } = require('mongodb');
 require('dotenv').config()
 const app = express();
 const port = process.env.PORT || 5000;
@@ -31,19 +31,26 @@ async function run() {
       const cursor = toyCollection.find();
       const result = await cursor.toArray();
       res.send(result);
-  })
-  //get a toy by id
-  app.get('/toy/:id', async (req, res) => {
-    const id = req.params.id;
-    const query = { _id: new ObjectId(id) }
+    })
+    //get a toy by id
+    app.get('/toy/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
 
-    const options = {
+      const options = {
         //projection: { title: 1, price: 1, toy_id: 1, img: 1 },_________
-    };
+      };
 
-    const result = await toyCollection.findOne(query, options);
-    res.send(result);
-})
+      const result = await toyCollection.findOne(query, options);
+      res.send(result);
+    })
+    //post
+    app.post('/addtoy', async (req, res) => {
+      const addedtoy = req.body;
+      console.log(addedtoy);
+      const result = await toyCollection.insertOne(addedtoy);
+      res.send(result);
+    });
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
@@ -56,11 +63,11 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('ToyBox running')
+  res.send('ToyBox running')
 })
 
 app.listen(port, () => {
-    console.log(`ToyBox Server is running on port ${port}`)
+  console.log(`ToyBox Server is running on port ${port}`)
 })
 
 
