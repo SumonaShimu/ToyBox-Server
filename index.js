@@ -10,7 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 //connect mongo
-// const uri = "mongodb+srv://toybox:AQbZCXhmlSRtXdxL@cluster0.7omvjfn.mongodb.net/?retryWrites=true&w=majority";
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.7omvjfn.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
