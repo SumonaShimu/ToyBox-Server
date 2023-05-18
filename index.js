@@ -38,7 +38,7 @@ async function run() {
       const query = { _id: new ObjectId(id) }
 
       const options = {
-        //projection: { title: 1, price: 1, toy_id: 1, img: 1 },_________
+        
       };
 
       const result = await toyCollection.findOne(query, options);
@@ -51,26 +51,26 @@ async function run() {
       const result = await toyCollection.insertOne(addedtoy);
       res.send(result);
     });
-     //update
-     app.patch('/toy/:id', async (req, res) => {
+    //update
+    app.patch('/toy/:id', async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const updatedtoy = req.body;
       console.log(updatedtoy);
       const updateToy = {
-          $set: {
-              price: updatedtoy.price
-          },
+        $set: {
+          price: updatedtoy.price
+        },
       };
       const result = await toyCollection.updateOne(filter, updateToy);
       res.send(result);
-  })
-       //delete
-       app.delete('/toy/:id', async (req, res) => {
-        const id = req.params.id;
-        const query = { _id: new ObjectId(id) }
-        const result = await toyCollection.deleteOne(query);
-        res.send(result);
+    })
+    //delete
+    app.delete('/toy/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await toyCollection.deleteOne(query);
+      res.send(result);
     })
 
     await client.db("admin").command({ ping: 1 });
@@ -81,8 +81,6 @@ async function run() {
   }
 }
 run().catch(console.dir);
-
-
 
 app.get('/', (req, res) => {
   res.send('ToyBox running')
