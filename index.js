@@ -36,7 +36,7 @@ async function run() {
     const toyCollection = client.db('toyCollection').collection('toys');
     //get all toys
     app.get('/alltoys', async (req, res) => {
-      const cursor = toyCollection.find();
+      const cursor = toyCollection.find().limit(20);
       const result = await cursor.toArray();
       res.send(result);
     })
