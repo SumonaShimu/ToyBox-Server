@@ -19,21 +19,23 @@ const client = new MongoClient(uri, {
     strict: true,
     deprecationErrors: true,
   },
-  useNewUrlParser:true,
-  useUnifiedTopology:true,
-  maxPoolSize:10,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  maxPoolSize: 10,
 });
 
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    client.connect((err)=>{
-      if(err) {
+    client.connect((err) => {
+      if (err) {
         console.error(err);
         return;
       }
     });
     const toyCollection = client.db('toyCollection').collection('toys');
+
+    
     //get all toys
     app.get('/alltoys', async (req, res) => {
       const cursor = toyCollection.find().limit(20);
@@ -46,12 +48,30 @@ async function run() {
       const query = { _id: new ObjectId(id) }
 
       const options = {
-        
+
       };
 
       const result = await toyCollection.findOne(query, options);
       res.send(result);
     })
+    //search by name
+    const indexKeys={name:1, subcategory:1};
+    const indexOptions={name:"namsub"};
+    const result=await toyCollection.createIndex(indexKeys,indexOptions);
+
+    app.get('/search/:text', async (req, res) => {
+      const text = req.params.text;
+      const result = await toyCollection
+        .find({
+          $or: [
+            { name: { $regex: text, $options: "i" } },
+            { subcategory: { $regex: text, $options: "i" } },
+          ]
+        }).toArray()
+
+      res.send(result);
+    })
+
     //post
     app.post('/addtoy', async (req, res) => {
       const addedtoy = req.body;
