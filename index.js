@@ -27,12 +27,12 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    client.connect((err) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-    });
+    // client.connect((err) => {
+    //   if (err) {
+    //     console.error(err);
+    //     return;
+    //   }
+    // });
     const toyCollection = client.db('toyCollection').collection('toys');
 
 
@@ -94,13 +94,14 @@ async function run() {
       const filter = { _id: new ObjectId(id) };
       const updatedtoy = req.body;
       console.log(updatedtoy);
-      const updateToy = {
+      const updatedDoc = {
         $set: {
-          price: updatedtoy.price
-        },
-      };
-      const result = await toyCollection.updateOne(filter, updateToy);
-      res.send(result);
+          ...updatedtoy
+        }
+      }
+
+      const result = await toyCollection.updateOne(filter, updatedDoc)
+      res.send(result)
     })
     //delete
     app.delete('/toy/:id', async (req, res) => {
