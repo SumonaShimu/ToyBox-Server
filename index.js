@@ -54,23 +54,21 @@ async function run() {
       const result = await toyCollection.findOne(query, options);
       res.send(result);
     })
-    //search by name & sub category
-    const indexKeys = { name: 1, subcategory: 1 };
-    const indexOptions = { name: "namsub" };
+    // Create index for toy name 
+    const indexKeys = { name: 1 };
+    const indexOptions = { name: "nameIndex" };
     const result = await toyCollection.createIndex(indexKeys, indexOptions);
 
     app.get('/search/:text', async (req, res) => {
       const text = req.params.text;
       const result = await toyCollection
         .find({
-          $or: [
-            { name: { $regex: text, $options: "i" } },
-            { subcategory: { $regex: text, $options: "i" } },
-          ]
-        }).toArray()
+          name: { $regex: text, $options: "i" }
+        }).toArray();
 
       res.send(result);
-    })
+    });
+
     //get mytoys
     app.get('/mytoys', async (req, res) => {
       let query = {};
